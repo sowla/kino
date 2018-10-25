@@ -1,21 +1,31 @@
 ##TODO: make sure no error if something missing
 
+#' Retreive Movie Details from Cineplex
+#'
+#' @param sel_imdb_ids
+#'
+#' @return details eg. runtime, poster URL..
+#' @export
+#'
+#' @examples
+#' my_mov_info_DE <- get_mov_info_de()
+#' my_mov_info_DE <- get_mov_info_de(city_html = get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/"))
 
-get_mov_info_de <- function(branch_html = get_branch(branch_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")) {
-  n_movies <- length(branch_html %>% rvest::html_nodes(".movie-schedule--details"))
+get_mov_info_de <- function(city_html = get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")) {
+  n_movies <- length(city_html %>% rvest::html_nodes(".movie-schedule--details"))
 
   mov_info_DE <- dplyr::tibble()
 
   for (i in 1:n_movies){
 
     title <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_node(".filmInfoLink") %>%  ##TODO: always OK to take first one only?
         rvest::html_text()
     )
 
     duration <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-attributes") %>%
         rvest::html_nodes(".length") %>%
         rvest::html_text() %>%
@@ -24,7 +34,7 @@ get_mov_info_de <- function(branch_html = get_branch(branch_url = "https://www.c
     )
 
     # ##TODO: presence vs. value; might need to add "attempt()" or something like this?
-    # fsk <- c(branch_html[[i]] %>%
+    # fsk <- c(city_html[[i]] %>%
     #   rvest::html_nodes(".movie-attributes") %>%
     #   rvest::html_nodes(".fsk") %>%
     #   html_text(trim = TRUE)
@@ -32,26 +42,26 @@ get_mov_info_de <- function(branch_html = get_branch(branch_url = "https://www.c
     # # https://en.wikipedia.org/wiki/Freiwillige_Selbstkontrolle_der_Filmwirtschaft
 
     genre <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-attributes") %>%
         rvest::html_nodes(".genre") %>%
         rvest::html_text(trim = TRUE)
     )
 
     poster_url <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-poster--preview img") %>%
         rvest::html_attr("src")
     )
 
     poster_alt <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-poster--preview img") %>%
         rvest::html_attr("alt")
     )
 
     plot_summ <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-schedule--description") %>%
         rvest::html_children() %>%
         .[1] %>%
@@ -59,7 +69,7 @@ get_mov_info_de <- function(branch_html = get_branch(branch_url = "https://www.c
     )
 
     description <- c(
-      branch_html[[i]] %>%
+      city_html[[i]] %>%
         rvest::html_nodes(".movie-schedule--description") %>%
         rvest::html_children() %>%
         .[2] %>%
@@ -82,8 +92,5 @@ get_mov_info_de <- function(branch_html = get_branch(branch_url = "https://www.c
   return(mov_info_DE)
 }
 
-# # example:
-# my_mov_info_DE <- get_mov_info()
-# my_mov_info_DE <- get_mov_info(branch_html = get_branch(branch_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/"))
 
 ##TODO: combine get_mov_info and EN

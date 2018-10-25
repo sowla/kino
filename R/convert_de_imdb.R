@@ -3,8 +3,28 @@
 
 # imdb_query <- screenings_details[1:5,][[1]] %>% unique()
 
-##TODO: edit defaults so doesn't take so long!
-convert_DE_imdb <- function(movies_DE_EN = convert_movies(imdb_query = get_screenings()[1:5,][[1]] %>% unique()), query = NULL, return = "id") {  # can be "id" or "url"
+#' Returns IMDB Details from German Movie Title(s)
+#'
+#' @param imdb_query
+#'
+#' @return an IMDB ID or URL
+#' @export
+#'
+#' @examples
+#' convert_DE_imdb(query = "Love, Simon")  # "tt5164432"
+#' convert_DE_imdb(query = "love, simon")  # error # case-senstive
+#' convert_DE_imdb(query = "Love, Simon", return = "url")  # "https://www.imdb.com/title/tt5164432"
+#'
+#' # should also work for non-English titles or multiple queries
+#' convert_DE_imdb(query = c("Jurassic World: Das gefallene Königreich", "Vom Ende einer Geschichte"))  # "tt4827986" "tt4881806"
+#' # convert_DE_imdb(query = c("Jurassic World: Das gefallene Königreich", "Vom Ende einer Geschichte"), return = "url")
+#'
+#'\dontrun{
+#' convert_DE_imdb()  # error
+#' convert_DE_imdb(query = c("I am a movie", "Love, Simon"))  # warning; "tt5164432"
+#'}
+
+convert_DE_imdb <- function(movies_DE_EN = convert_movies(imdb_query = c("Love, Simon", "Vom Ende einer Geschichte")), query = NULL, return = "id") {  # can be "id" or "url"
   if (is.null(query)) {
     stop("imdb_query can't be NULL")
   }
@@ -30,14 +50,3 @@ convert_DE_imdb <- function(movies_DE_EN = convert_movies(imdb_query = get_scree
   }
 }
 
-# # examples:
-# convert_DE_imdb(query = "Love, Simon")  # "tt5164432"
-# convert_DE_imdb(query = "love, simon")  # error # case-senstive
-# convert_DE_imdb(query = "Love, Simon", return = "url")  # "https://www.imdb.com/title/tt5164432"
-#
-# # should also work for non-English titles or multiple queries
-# convert_DE_imdb(query = c("Jurassic World: Das gefallene Königreich", "Vom Ende einer Geschichte"))  # "tt4827986" "tt4881806"
-# # convert_DE_imdb(query = c("Jurassic World: Das gefallene Königreich", "Vom Ende einer Geschichte"), return = "url")
-#
-# convert_DE_imdb()  # error
-# convert_DE_imdb(query = c("I am a movie", "Love, Simon"))  # warning; "tt5164432"

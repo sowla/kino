@@ -1,20 +1,47 @@
 # kino
 
-The goal of kino is to ...
+{kino} was born out of my experience checking out English OmU movie options in Münster. Understandably, the trailers and descriptions are in German, but searching for their English counterparts feels unnecessarily tedious - this should be automatable! The idea is to scrape screening and German movie information from cineplex.de and rating and English movie information from imdb.com and omdb's API. Eventually, I'll build a shiny app on top of this, so anyone can use it! :)
+
+At the moment, the package is still under construction and only works with OmU movies in Münster.
 
 ## Installation
 
-You can install the released version of kino from [CRAN](https://CRAN.R-project.org) with:
+You can install {kino} from github with:
 
 ``` r
-install.packages("kino")
+# install.packages("devtools")
+devtools::install_github("sowla/kino")
 ```
 
-## Example
+## Here's how you might use {kino}
 
-This is a basic example which shows you how to solve a common problem:
-
+First, select a city and checkout the available screening details:
 ``` r
-## basic example code
+library(kino)
+
+my_city <- get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")
+
+my_screenings_details <- get_screenings(city_html = my_city)
+
+my_screenings_details
 ```
 
+Filter the results based on eg. site or release types:
+``` r
+filter_screenings(my_screenings_details, sel_sites = "Cineplex", sel_release_types = "2D OmU")
+```
+
+Decide which movies you're interested in and retreive some/all IMDB details:
+``` r
+imdb_details <- convert_movies("Johnny English - Man lebt nur dreimal")
+
+imdb_details
+
+imdb_details$imdb_id
+
+my_movie_info <- get_mov_info_en(sel_imdb_ids = "tt6921996")
+
+filter_movies(mov_info = my_movie_info, details = c("title", "runtime", "plot"))
+```
+
+Note: at the moment, when you test this, you'll probably get different results.. I plan to add data that you use to test the package, then I'll update the documentation so they fit.. thank you for your patience!

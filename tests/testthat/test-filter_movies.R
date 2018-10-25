@@ -2,7 +2,7 @@ context("test-filter_movies.R")
 
 test_that("filter_movies() correctly filters search results", {
   n_movies <- length(
-    get_branch(branch_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/") %>%
+    get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/") %>%
       rvest::html_nodes(".movie-schedule--details")
     )
 

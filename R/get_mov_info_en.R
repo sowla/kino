@@ -1,6 +1,16 @@
 ##TODO: make sure no error if something missing
 
 
+#' Retreive Movie Details from IMDB
+#'
+#' @param sel_imdb_ids
+#'
+#' @return details eg. ratings, runtime, poster URL..
+#' @export
+#'
+#' @examples
+#' get_mov_info_en()
+
 get_mov_info_en <- function(sel_imdb_ids = c("tt5164432", "tt4881806")) {
 
   # sel_imdb_ids <- movies_DE_EN$imdb_id
@@ -81,5 +91,3 @@ get_mov_info_en <- function(sel_imdb_ids = c("tt5164432", "tt4881806")) {
   return(movie_details_EN)
 }
 
-# # example:
-# get_mov_info_en()

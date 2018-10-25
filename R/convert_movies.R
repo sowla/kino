@@ -1,3 +1,13 @@
+#' Returns Relevant Details from German Movie Title(s)
+#'
+#' @param imdb_query
+#'
+#' @return a tibble with English title(s) and IMDB details
+#' @export
+#'
+#' @examples
+#' convert_movies(c("Love, Simon", "Vom Ende einer Geschichte"))
+
 convert_movies <- function(imdb_query = c("Love, Simon", "Vom Ende einer Geschichte")) {  ##TODO: change default?
 
   ##TODO: if null/na
@@ -34,7 +44,7 @@ convert_movies <- function(imdb_query = c("Love, Simon", "Vom Ende einer Geschic
       rvest::html_nodes("table") %>%
       .[[2]] %>%
       rvest::html_table() %>%
-      dplyr::filter(X1 == "Germany") %>%
+      dplyr::filter(stringr::str_detect(X1, "Germany")) %>%
       dplyr::select(X2) %>%
       as.character()
 
@@ -56,5 +66,3 @@ convert_movies <- function(imdb_query = c("Love, Simon", "Vom Ende einer Geschic
   return(movies_DE_EN)
 }
 
-# #example:
-# convert_movies(c("Love, Simon", "Vom Ende einer Geschichte"))
