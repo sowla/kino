@@ -1,8 +1,8 @@
 #' Returns Relevant Details from German Movie Title(s)
 #'
-#' @param imdb_query
+#' @param imdb_query name of movie to search in IMDB as a vector of strings
 #'
-#' @return a tibble with English title(s) and IMDB details
+#' @return a tibble with English title(s) and IMDB details, including IMDB ID (eg. "tt5177088")
 #' @export
 #'
 #' @examples
@@ -10,8 +10,7 @@
 
 convert_movies <- function(imdb_query = c("Love, Simon", "Vom Ende einer Geschichte")) {  ##TODO: change default?
 
-  ##TODO: if null/na
-  # imdb_query <- screenings_details[1:5,][[1]] %>% unique()
+  ##TODO: if null/na; check unique?
 
   movies_DE_EN <- dplyr::tibble()
 
@@ -50,7 +49,7 @@ convert_movies <- function(imdb_query = c("Love, Simon", "Vom Ende einer Geschic
 
     # if (imdb_query[i] == check_german_title) {
     # "Die brillante Mademoiselle Neila" != "Die brillante Mademoiselle Neïla"
-    ##TODO: mention showing closest match to...
+    ##TODO: use fuzzy matching to check; mention showing closest match to...
     movies_DE_EN <- dplyr::bind_rows(
       movies_DE_EN,
       dplyr::tibble(

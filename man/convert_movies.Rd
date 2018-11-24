@@ -8,7 +8,7 @@ convert_movies(imdb_query = c("Love, Simon",
   "Vom Ende einer Geschichte"))
 }
 \arguments{
-\item{imdb_query}{}
+\item{imdb_query}{name of movie to search in IMDB as a vector of strings}
 }
 \value{
 a tibble with English title(s) and IMDB details

@@ -1,10 +1,8 @@
-##TODO: write test so people can check css selectors still up to date?
-
-#' Retrieve Details from the Page of a Cineplex City
+#' Retrieve Details from the Site of a Cineplex City
 #'
-#' @param city_url
+#' @param city_url URL for cineplex in the city you're interested in (at the moment I'm only testing Münster originals, but in future versions it will be the city name as a string, and the function will determine the URL)
 #'
-#' @return input for get_screenings() (at the moment only testing Münster originals)
+#' @return an xml nodeset that can be used as input for `get_screenings()`
 #' @export
 #'
 #' @examples
@@ -12,5 +10,8 @@
 
 
 get_city <- function(city_url) {
-  xml2::read_html(city_url) %>% rvest::html_nodes(".movie-schedule")
+  session <- polite::bow("https://www.cineplex.de/filmreihe/originals/614/muenster/")
+
+  polite::scrape(session, accept = "html") %>%
+    rvest::html_nodes(".movie-schedule")
 }

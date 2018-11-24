@@ -4,18 +4,18 @@
 \alias{get_screenings}
 \title{Retreive Screenings Available at a Cineplex City}
 \usage{
-get_screenings(city_html = get_city(city_url =
+get_screenings(city_xml = get_city(city_url =
   "https://www.cineplex.de/filmreihe/originals/614/muenster/"))
 }
 \arguments{
-\item{city_html}{}
+\item{city_xml}{an xml nodeset; output of `get_city()`}
 }
 \value{
-input for filter_screenings()
+data frame with screening details for a given city that can be used as input for `filter_screenings()`.
 }
 \description{
 Retreive Screenings Available at a Cineplex City
 }
 \examples{
-my_screenings_details <- get_screenings(city_html = my_city)
+my_screenings_details <- get_screenings(city_xml = my_city)
 }

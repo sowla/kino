@@ -2,19 +2,23 @@
 output: github_document
 ---
 
+```{r include=FALSE}
+knitr::opts_chunk$set(comment='#>')
+```
+
 # kino
 
-{kino} was born out of my experience checking out English OmU movie options in Münster. Understandably, the trailers and descriptions are in German, but searching for their English counterparts feels unnecessarily tedious - this should be automatable! The idea is to scrape screening and German movie information from cineplex.de and rating and English movie information from imdb.com and omdb's API. Eventually, I'll build a shiny app on top of this, so anyone can use it! :)
+{kino} was born out of my experience checking out English original soundtrack movie options in Münster. Understandably, the trailers and descriptions are in German, but searching for their English counterparts feels unnecessarily tedious - this should be automatable! The idea is to scrape screening and German movie information from cineplex.de and rating and English movie information from imdb.com and omdb's API. Eventually, I'll build a shiny app on top of this, so anyone can use it! :)
 
-At the moment, the package is still under construction and only works with OmU movies in Münster.
+At the moment, the package is still under construction and only works with ["originals" movies in Münster](https://www.cineplex.de/filmreihe/originals/614/muenster/).
 
 ## Installation
 
 You can install {kino} from github with:
 
-```{r message=FALSE, warning=FALSE}
-# install.packages("devtools")
-devtools::install_github("sowla/kino")
+```{r eval=FALSE, message=FALSE, warning=FALSE}
+# install.packages("remotes")
+remotes::install_github("sowla/kino")
 ```
 
 ## Here's how you might use {kino}
@@ -25,29 +29,48 @@ library(kino)
 
 my_city <- get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")
 
-my_screenings_details <- get_screenings(city_html = my_city)
+my_screenings_details <- get_screenings(my_city)
 
 my_screenings_details
 ```
 
 Filter the results based on eg. site or release types:
 ```{r}
-filter_screenings(my_screenings_details, sel_sites = "Cineplex", sel_release_types = "2D OmU")
+filter_screenings(
+  my_screenings_details, 
+  sel_sites = "Cineplex", 
+  sel_release_types = c("2D OmU", "2D OV")
+)
 ```
 
 Decide which movies you're interested in and retreive some/all IMDB details:
 ```{r}
-imdb_details <- convert_movies("Johnny English - Man lebt nur dreimal")
+imdb_details <- convert_movies("Widows - Tödliche Witwen")
 
 imdb_details
 
 imdb_details$imdb_id
 
-my_movie_info <- get_mov_info_en(sel_imdb_ids = "tt6921996")
+my_movie_info <- get_mov_info_en(imdb_details$imdb_id)
 
-filter_movies(mov_info = my_movie_info, details = c("title", "runtime", "plot"))
+cat(strwrap(my_movie_info$plot), sep = "\n")  # strwrap() and cat() to format output
+```
 
-my_movie_info$plot
+Note: if you use `filter_movies()` function, it'll give a warning message for any unavailable details.
+
+```{r eval=FALSE, echo=TRUE}
+# this will give a fatal error:
+dplyr::select(my_movie_info, title, hey, runtime, plot)
+```
+
+```{r echo=FALSE}
+cat("Error in .f(.x[[i]], ...) : object 'hey' not found")
+```
+
+
+```{r}
+# this returns a data frame for just the available details
+filter_movies(my_movie_info, c("title", "hey", "runtime", "plot"))
 ```
 
 Note: at the moment, when you test this, you'll probably get results that look different from this particular example, which is rendered on `r Sys.Date()`.. I plan to add sample data that you use to test the package, then I'll update the documentation so they fit.. thank you for your patience!

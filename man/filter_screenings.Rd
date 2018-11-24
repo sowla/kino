@@ -8,13 +8,13 @@ filter_screenings(screenings_details = get_screenings(),
   sel_dates = NULL, sel_release_types = NULL, sel_sites = NULL)
 }
 \arguments{
-\item{screenings_details}{output from get_screenings()}
+\item{screenings_details}{a data frame with screening details; output from `get_screenings()`}
 
-\item{sel_dates}{selected date(s)}
+\item{sel_dates}{selected date(s) in "YYYY-MM-DD" format as a vector of strings}
 
-\item{sel_release_types}{selected release type(s)}
+\item{sel_release_types}{selected release type(s) as a vector of strings}
 
-\item{sel_sites}{selected site(s)}
+\item{sel_sites}{selected site(s) as a vector of strings}
 }
 \value{
 a tibble of movie titles (in German) and screening details
@@ -25,7 +25,7 @@ Filter Available Screenings
 \examples{
 filter_screenings(my_screenings_details)  # returns all screenings in my_screenings_details
 filter_screenings(sel_dates = Sys.Date())  # returns all screenings found playing today
-filter_screenings(sel_sites = "Cineplex")  # returns all screenings found playing in Cineplex
+filter_screenings(sel_sites = c("Cineplex", "Schloßtheater"))  # returns all screenings found playing in Cineplex or Schloßtheater branches
 filter_screenings(sel_release_types = "2D OmU")  # returns all screenings found playing in 2D OmU
 filter_screenings(sel_sites = "just making stuff up now")  # "no results were found"
 }

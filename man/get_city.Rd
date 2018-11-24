@@ -2,18 +2,18 @@
 % Please edit documentation in R/get_city.R
 \name{get_city}
 \alias{get_city}
-\title{Retrieve Details from the Page of a Cineplex City}
+\title{Retrieve Details from the Site of a Cineplex City}
 \usage{
 get_city(city_url)
 }
 \arguments{
-\item{city_url}{}
+\item{city_url}{URL for cineplex in the city you're interested in (at the moment I'm only testing Münster originals, but in future versions it will be the city name as a string, and the function will determine the URL)}
 }
 \value{
-input for get_screenings() (at the moment only testing Münster originals)
+an xml nodeset that can be used as input for `get_screenings()`
 }
 \description{
-Retrieve Details from the Page of a Cineplex City
+Retrieve Details from the Site of a Cineplex City
 }
 \examples{
 my_city <- get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")

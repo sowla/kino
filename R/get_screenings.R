@@ -1,24 +1,22 @@
-##TODO: make sure no error if something missing
-
 #' Retreive Screenings Available at a Cineplex City
 #'
-#' @param city_html
+#' @param city_xml an xml nodeset; output of `get_city()`
 #'
-#' @return input for filter_screenings()
+#' @return data frame with screening details for a given city that can be used as input for `filter_screenings()`.
 #' @export
 #'
 #' @examples
-#' my_screenings_details <- get_screenings(city_html = my_city)
+#' my_screenings_details <- get_screenings(city_xml = my_city)
 
 
-get_screenings <- function(city_html = get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")) {
+get_screenings <- function(city_xml = get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")) {
 
-  if (is.null(city_html) | any(is.na(city_html))) {
-    stop("`city_html` can't be empty or missing. See examples in `?get_city`.",
+  if (is.null(city_xml) | any(is.na(city_xml))) {
+    stop("`city_xml` can't be empty or missing. See examples in `?get_city`.",
       call. = FALSE)
   }
 
-  n_movies <- length(city_html %>% rvest::html_nodes(".movie-schedule--details"))
+  n_movies <- length(city_xml %>% rvest::html_nodes(".movie-schedule--details"))
 
   screenings_details <- dplyr::tibble()
 
@@ -26,33 +24,33 @@ get_screenings <- function(city_html = get_city(city_url = "https://www.cineplex
   for (i in 1:n_movies){
 
     german_title <- c(
-      city_html[[i]] %>%
+      city_xml[[i]] %>%
         rvest::html_node(".filmInfoLink") %>%  # take first only (possible second node has no text)
         rvest::html_text()
     )
 
     dates <- c(
-      city_html[[i]] %>%
+      city_xml[[i]] %>%
         rvest::html_nodes(".schedule__date") %>%
         rvest::html_attr("datetime")
     )
 
     times <- c(
-      city_html[[i]] %>%
+      city_xml[[i]] %>%
         rvest::html_nodes(".movie-schedule--performances--all ") %>%  # other one not unique
         rvest::html_nodes(".schedule__time") %>%
         rvest::html_text()
     )
 
     release_types <- c(
-      city_html[[i]] %>%  ##TODO: split 2D/3D from OmU/OV?
+      city_xml[[i]] %>%  ##TODO: split 2D/3D from OmU/OV?
         rvest::html_nodes(".performance-date-block") %>%
         rvest::html_nodes(".performance-holder") %>%
         rvest::html_attr("data-release-type")  ##TODO: collect lots then unique to see factors
     )
 
     sites <- c(
-      city_html[[i]] %>%
+      city_xml[[i]] %>%
         rvest::html_nodes(".performance-date-block") %>%
         rvest::html_nodes(".schedule__site") %>%
         html_text_no_spaces() %>%
@@ -61,7 +59,7 @@ get_screenings <- function(city_html = get_city(city_url = "https://www.cineplex
 
     # ##TODO: presence vs. value; might need to add "attempt()" or something like this?
     # accessibility_icons <- c(
-    #   city_html[[i]] %>%
+    #   city_xml[[i]] %>%
     #     rvest::html_nodes(".performance-date-block") %>%
     #     rvest::html_nodes(".schedule__location") %>%
     #     rvest::html_nodes(".icon-wheelchair_alt") %>%

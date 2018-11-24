@@ -1,5 +1,3 @@
-##TODO: make sure no error if something missing
-
 #' Retreive Movie Details from Cineplex
 #'
 #' @param sel_imdb_ids
@@ -91,6 +89,3 @@ get_mov_info_de <- function(city_html = get_city(city_url = "https://www.cineple
   }
   return(mov_info_DE)
 }
-
-
-##TODO: combine get_mov_info and EN
