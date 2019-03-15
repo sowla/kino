@@ -10,6 +10,8 @@
 
 
 get_city <- function(city_url) {
+
+  # ask for permission to scrape; see https://github.com/dmi3kno/polite
   session <- polite::bow("https://www.cineplex.de/filmreihe/originals/614/muenster/")
 
   polite::scrape(session, accept = "html") %>%

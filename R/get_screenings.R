@@ -9,9 +9,9 @@
 #' my_screenings_details <- get_screenings(city_xml = my_city)
 
 
-get_screenings <- function(city_xml = get_city(city_url = "https://www.cineplex.de/filmreihe/originals/614/muenster/")) {
+get_screenings <- function(city_xml) {
 
-  if (is.null(city_xml) | any(is.na(city_xml))) {
+  if (is.null(city_xml) | base::missing(city_xml)) {
     stop("`city_xml` can't be empty or missing. See examples in `?get_city`.",
       call. = FALSE)
   }
@@ -44,17 +44,17 @@ get_screenings <- function(city_xml = get_city(city_url = "https://www.cineplex.
 
     release_types <- c(
       city_xml[[i]] %>%  ##TODO: split 2D/3D from OmU/OV?
-        rvest::html_nodes(".performance-date-block") %>%
+        rvest::html_nodes(".movie-schedule--performances--all") %>%
         rvest::html_nodes(".performance-holder") %>%
-        rvest::html_attr("data-release-type")  ##TODO: collect lots then unique to see factors
+        rvest::html_attr("data-release-type")
+        ##TODO: collect lots then unique to see factors
     )
 
     sites <- c(
       city_xml[[i]] %>%
-        rvest::html_nodes(".performance-date-block") %>%
-        rvest::html_nodes(".schedule__site") %>%
-        html_text_no_spaces() %>%
-        stringr::str_extract(".+(?=, )")
+        rvest::html_nodes(".movie-schedule--performances--all") %>%
+        rvest::html_nodes(".performance-holder") %>%
+        rvest::html_attr("data-site")
     )
 
     # ##TODO: presence vs. value; might need to add "attempt()" or something like this?
